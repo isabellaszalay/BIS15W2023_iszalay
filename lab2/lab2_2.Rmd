@@ -155,7 +155,7 @@ The same methods of selecting elements in a vector apply to data matrices. We us
 ```{r}
 harry_potter_matrix[2,1]
 ```
-
+[column, row]
 Adding a colon `:` selects the specified elements in a column.  
 ```{r}
 harry_potter_matrix[1:4]

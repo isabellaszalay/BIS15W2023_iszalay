@@ -1,0 +1,67 @@
+---
+title: "Lab 3 Warm up"
+output: html_document
+date: "2023-01-17"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+##1.Plant Height Vector
+```{r}
+plant_heights <- c(30.7, 37.6, 28.4, NA, 33.2)
+plant_heights
+```
+##2.Plant Mass Vector
+```{r}
+plant_masses <- c(4, 5.2, 3.7, NA, 4.6)
+plant_masses
+```
+##3.Combine Vectors
+```{r}
+plant_growth <- c(plant_heights, plant_masses)
+plant_growth
+```
+
+##4.Create Matrix
+```{r}
+plant_growth_matrix <- matrix(plant_growth, nrow = 5, byrow=F)
+plant_growth_matrix
+```
+
+##5.Label Columns and Rows
+```{r}
+measurement <- c("height", "mass")
+measurement
+```
+```{r}
+plants <- c("plant1","plant2", "plant3","plant4","plant5")
+plants
+```
+
+```{r}
+rownames(plant_growth_matrix) <- plants
+```
+
+```{r}
+colnames(plant_growth_matrix) <- measurement
+```
+
+##6.Print Matrix
+```{r}
+plant_growth_matrix
+```
+
+##Calculate Means
+```{r}
+plant_means <- colMeans(plant_growth_matrix, na.rm=T)
+plant_means
+```
+
+## Add Row
+```{r}
+plant_growth_matrix_final <- rbind(plant_growth_matrix, plant_means)
+plant_growth_matrix_final
+```
+

@@ -3,9 +3,9 @@ title: "Lab 3 Homework"
 author: "Isabella Szalay"
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  html_document: 
     theme: spacelab
-    toc: no
+    keep_md: yes
 ---
 
 ## Instructions
@@ -15,7 +15,7 @@ Make sure to use the formatting conventions of RMarkdown to make your report nea
 
 ## Load the tidyverse
 ```{r message=FALSE, warning=FALSE}
-#library(tidyverse)
+library(tidyverse)
 ```
 
 ## Mammals Sleep
@@ -98,7 +98,10 @@ sleep[,6]
 ```{r}
 max(sleep[,6])
 ```
-
+```{r}
+sleep[43,1]
+```
+Little brown bats sleep the longest.
 
 ## Push your final code to GitHub!
 Please be sure that you check the `keep md` file in the knit preferences.   

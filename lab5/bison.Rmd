@@ -1,0 +1,59 @@
+---
+title: "bison"
+output: html_document
+date: "2023-01-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## load tidyverse
+```{r}
+library(tidyverse)
+```
+## Open file
+```{r}
+bison <- read_csv("data/bison.csv")
+bison
+```
+## evaluate the data
+```{r}
+glimpse(bison)
+```
+
+## Pull out code, sex, weight, yob
+```{r}
+bison_new <- select(bison, "animal_code", "animal_sex", "animal_weight", "animal_yob")
+bison_new
+```
+
+
+## Pull out animals born between 1980-1990
+```{r}
+bison_yob <- filter(bison_new, animal_yob>= 1980 & animal_yob<= 1990)
+bison_yob
+```
+
+
+## Males Vs Females
+```{r}
+table(bison_yob$animal_sex)
+```
+
+
+## Males Vs Females larger
+```{r}
+bison_m <- filter(bison_yob, animal_sex=="M")
+bison_f <- filter(bison_yob, animal_sex=="F")
+```
+
+## Means
+```{r}
+mean(bison_m$animal_weight)
+```
+
+```{r}
+mean(bison_f$animal_weight)
+```
+

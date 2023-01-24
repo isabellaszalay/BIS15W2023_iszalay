@@ -1,0 +1,43 @@
+---
+title: "Untitled"
+output: html_document
+date: "2023-01-19"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load Packages
+```{r}
+library("tidyverse")
+install.packages("palmerpenguins")
+```
+```{r}
+library(palmerpenguins)
+```
+```{r}
+penguins
+```
+
+## Dimensions of "penguins"
+```{r}
+dim(penguins)
+```
+
+## Names of "penguins"
+```{r}
+names(penguins)
+```
+
+## Individuals
+```{r}
+table(penguins$island)
+```
+
+
+## Mean body mass
+```{r}
+mean(penguins$body_mass_g, na.rm=T)
+```
+

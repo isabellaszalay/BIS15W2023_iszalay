@@ -1,0 +1,85 @@
+---
+title: "R codes master list"
+output: html_document
+date: "2023-01-26"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+library("tidyverse")
+
+llibrary("janitor")
+
+read_csv("data/dataset.csv")
+loads data
+
+janitor::clean_names(dataset)
+cleans up column names
+
+library("skimr")
+
+names(dataset)
+gives names of columns
+
+glimpse(dataset)
+insight into data
+
+str(dataset)
+structure of data set
+
+head(dataset)
+just columns and first few rows
+
+how to find mean: 
+mean(dataset$nameofcolumnyouwantmeanfrom)
+
+how to find median:
+median(dataset$nameofcolumnyouwantmedianfrom)
+
+sd()
+
+min()
+
+max()
+
+sum()
+
+n()
+returns the length of a column
+
+first()
+returns first value in a column
+
+last()
+returns last value in a column
+
+n_distinct()
+number of distinct values in a column
+
+select(column1, column2, column3)
+
+filter(row1=="chr", row2==num, row3>=num)
+
+arrange()
+
+mutate()
+change and add a column
+
+dataset %>%
+  group_by() %>%
+  summarize(mean_sleep = mean(sleep_total), 
+              min_sleep = min(sleep_total),
+              max_sleep = max(sleep_total),
+              total = n())
+
+count(,sort=T) sort=T will put in descending order
+
+na.rm=TRUE    
+is.na
+
+              
+sleep  --> sumarize mean sleep, minimum sleep, max sleep
+

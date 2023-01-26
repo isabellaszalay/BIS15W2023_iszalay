@@ -1,0 +1,67 @@
+---
+title: "Untitled"
+output: html_document
+date: "2023-01-26"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+library(janitor)
+```
+```{r}
+ecosphere <- 
+  read_csv("data/ecs21351-sup-0003-SupplementS1.csv", skip=2)
+```
+```{r}
+names(ecosphere)
+```
+
+```{r}
+ecosphere <- janitor::clean_names(ecosphere)
+ecosphere
+```
+
+```{r}
+glimpse(ecosphere)
+```
+
+```{r}
+ecosphere %>%
+  filter(diet == "Omnivore") %>%
+  select(scientific_name, common_name, diet)
+```
+
+```{r}
+ecosphere %>%
+  filter(diet == "Vegetation") %>%
+  select(scientific_name, common_name, diet)
+```
+
+```{r}
+ecosphere %>%
+  filter(diet == "Nectar") %>%
+  select(scientific_name, common_name, diet)
+```
+```{r}
+ecosphere %>%
+  tabyl(diet) %>%
+  arrange(desc(n))
+```
+
+
+```{r}
+veggie <- ecosphere %>%
+  filter(diet == "Vegetation") %>%
+  select(scientific_name, common_name, diet, family)
+tabyl(veggie, family)
+```
+
+
+

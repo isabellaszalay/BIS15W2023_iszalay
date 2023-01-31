@@ -1,0 +1,379 @@
+---
+title: "R codes master list"
+output: html_document
+date: "2023-01-26"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+[row, column]
+
+
+```{r}
+new_vector <- c(1,2,3,4,5,6,7,8,9)
+```
+
+
+```{r}
+sum_object1_object2 <- sum(object1, object2)
+```
+
+
+```{r}
+dataframe <- rbind(dataframe, newrow)
+```
+add new row to dataframe
+
+
+my_numeric <- 42
+my_integer <- 2L #adding an L automatically denotes an integer
+my_character <- "universe"
+my_logical <- FALSE
+my_complex <- 2+4i
+
+```{r}
+library("tidyverse")
+
+library("janitor")
+
+library("skimr")
+```
+
+
+```{r}
+read_csv("data/dataset.csv")
+```
+loads data
+
+
+```{r}
+dataset <- readr::read_csv("data/dataset.csv", na = c("", "-99", "-"))
+```
+
+
+```{r}
+janitor::clean_names(dataset)
+```
+cleans up column names
+
+
+```{r}
+dataset_new <- rename(dataset, newname="oldname", newname2="oldname2")
+```
+
+
+```{r}
+dataset <- select_all(dataset, tolower)
+```
+changes all column names to lower case
+
+
+```{r}
+select_all(dataset, ~str_replace(., " ", "_"))
+```
+get rid of spaces
+
+
+```{r}
+names(dataset)
+```
+gives names of columns
+
+
+```{r}
+glimpse(dataset)
+```
+insight into data
+
+
+```{r}
+str(dataset)
+```
+structure of data set
+
+
+```{r}
+dim(dataset)
+```
+dimensions of data set
+
+
+```{r}
+head(dataset)
+```
+just columns and first few rows
+
+
+```{r}
+tail(dataset, n=)
+```
+columns and last few rows
+
+
+```{r}
+levels(dataset$column)
+```
+levels of the column
+
+
+```{r}
+summary(dataset)
+```
+
+
+```{r}
+nrow(dataset)
+```
+
+
+```{r}
+ncol(dataset)
+```
+
+
+how to find mean: 
+
+```{r}
+mean(dataset$nameofcolumnyouwantmeanfrom)
+```
+
+OR
+
+```{r}
+dataset %>%
+  summarise(mean_column=mean(column))
+```
+
+
+```{r}
+median(dataset$nameofcolumnyouwantmedianfrom)
+```
+how to find median
+
+
+```{r}
+sd()
+```
+
+
+```{r}
+min()
+```
+
+
+```{r}
+max()
+```
+
+
+```{r}
+n()
+```
+returns the length of a column
+
+
+```{r}
+first()
+```
+returns first value in a column
+
+
+```{r}
+last()
+```
+returns last value in a column
+
+
+```{r}
+n_distinct()
+```
+number of distinct values in a column
+
+
+```{r}
+select(column1, column2, column3)
+```
+
+
+```{r}
+select(dataset, starts_with(""))
+```
+
+
+```{r}
+select(dataset, -column1, -column2)
+```
+excludes column1 and column2
+
+da
+
+
+```{r}
+ends_with()
+```
+Select columns that end with a character string  
+
+
+```{r}
+contains()
+```
+Select columns that contain a character string  
+
+
+```{r}
+matches()
+```
+Select columns that match a regular expression  
+
+
+```{r}
+one_of()
+```
+Select columns names that are from a group of names  
+
+
+```{r}
+filter(dataset, col1=="chr", col2==num, col3>=num)
+```
+
+
+```{r}
+filter(dataset, column != "")
+```
+filter rows that do NOT contain " "
+
+
+```{r}
+filter(dataset, column %in% c(1, 2))
+```
+Filtering multiple values within the same variable requires the `%in%`
+
+
+```{r}
+filter(dataset, between(column, 1, 2))
+```
+use `between` if you are looking for a range of specific values
+
+
+```{r}
+filter(dataset, near(column, 1, tol = .5))
+```
+extract observations "near" a certain value but you need to specify a tolerance
+
+
+& - and
+
+
+```{r}
+filter(condition1 | condition2)
+```
+will return rows where condition 1 or condition 2 is met
+
+
+```{r}
+filter(xor(condition1, condition2))
+```
+will return all rows where only one of the conditions is met, and not when both conditions are met
+
+
+```{r}
+arrange()
+```
+command is a bit like a sort command in excel. Note that the default is ascending order
+
+
+```{r}
+desc()
+```
+sort in decreasing order
+
+
+```{r}
+mutate()
+```
+calculate a new column from existing columns
+
+
+```{r}
+select_if(dataset, ~!is.numeric(.))
+```
+selects columns that are NOT numeric (~!)
+
+
+```{r}
+select_if(dataset, is.numeric)
+```
+selects columns that are numeric
+
+
+```{r}
+dataset$column <- as.factor(dataset$column)
+class(dataset$column)
+```
+change class of a column to a factor
+
+
+```{r}
+dataset <- 
+dataset %>% 
+  mutate(across(c(column1, column2, column3, column4), as_factor))
+```
+change class of multiple columns to factors
+
+
+```{r}
+dataset %>%
+ mutate(column_new = ifelse(column == -999.00, NA, column))
+```
+change -999 to NA
+
+
+```{r}
+summarise(across(contains(" "), mean))
+```
+several columns contain " " so this creates a table with all the means of colums that contain " "
+
+
+```{r}
+dataset %>%
+  group_by() %>%
+  summarize(mean_sleep = mean(sleep_total), 
+              min_sleep = min(sleep_total),
+              max_sleep = max(sleep_total),
+              total = n())
+```
+**can add filter, select, group_by to the summarize/summarise functions to hone in 
+ 
+              
+```{r}
+dataset %>%
+count(column)
+```
+how many types (of that column) in dataset
+
+
+```{r}
+count(,sort=T) 
+```
+sort=T will put in descending order
+
+
+```{r}
+hist(dataset$column)
+```
+histogram of column data
+
+
+```{r}
+na.rm=TRUE    
+is.na
+anyNA
+```
+
+
+              
+sleep  --> sumarize mean sleep, minimum sleep, max sleep
+

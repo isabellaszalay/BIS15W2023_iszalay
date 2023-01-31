@@ -77,6 +77,7 @@ names(ecosphere)
 ## [21] "upper_95_percent_ci"
 ```
 
+
 Problem 2. (1 point) Use the function of your choice to summarize the data.
 
 ```r
@@ -109,6 +110,7 @@ glimpse(ecosphere)
 ## $ upper_95_percent_ci         <dbl> 1.055, 1.009, 1.104, 1.041, 1.036, 1.243, …
 ```
 
+
 Problem 3. (2 points) How many distinct orders of birds are represented in the data?
 
 ```r
@@ -140,7 +142,8 @@ ecosphere %>%
 ## 18 Strigiformes         16
 ## 19 Trogoniformes         1
 ```
-19 orders
+There are 19 orders of birds represented in the data.
+
 
 Problem 4. (2 points) Which habitat has the highest diversity (number of species) in the data?
 
@@ -161,7 +164,8 @@ ecosphere %>%
 ## 6 Grassland    36
 ## 7 <NA>         14
 ```
-Woodland
+Woodland habitat is the most diverse.
+
 
 Run the code below to learn about the `slice` function. Look specifically at the examples (at the bottom) for `slice_max()` and `slice_min()`. If you are still unsure, try looking up examples online (https://rpubs.com/techanswers88/dplyr-slice). Use this new function to answer question 5 below.
 
@@ -189,6 +193,8 @@ ecosphere %>%
 ## #   ²​scientific_name, ³​life_expectancy, ⁴​urban_affiliate, ⁵​migratory_strategy,
 ## #   ⁶​log10_mass
 ```
+The Sooty Shearwater has the largest winter range.
+
 
 
 ```r
@@ -209,6 +215,8 @@ ecosphere %>%
 ## #   ²​scientific_name, ³​life_expectancy, ⁴​urban_affiliate, ⁵​migratory_strategy,
 ## #   ⁶​log10_mass
 ```
+The Skylark has the smallest winter range area.
+
 
 Problem 6. (2 points) The family Anatidae includes ducks, geese, and swans. Make a new object `ducks` that only includes species in the family Anatidae. Restrict this new dataframe to include all variables except order and family.
 
@@ -241,6 +249,7 @@ ducks
 ## #   ⁶​log10_mass, ⁷​mean_eggs_per_clutch, ⁸​mean_age_at_sexual_maturity
 ```
 
+
 Problem 7. (2 points) We might assume that all ducks live in wetland habitat. Is this true for the ducks in these data? If there are exceptions, list the species below.
 
 ```r
@@ -260,23 +269,31 @@ ducks %>%
 ## #   ³​life_expectancy, ⁴​urban_affiliate, ⁵​migratory_strategy, ⁶​log10_mass,
 ## #   ⁷​mean_eggs_per_clutch, ⁸​mean_age_at_sexual_maturity
 ```
+The Common Eider is the only exception among the ducks, living in the Ocean.
+
 
 Problem 8. (4 points) In ducks, how is mean body mass associated with migratory strategy? Do the ducks that migrate long distances have high or low average body mass?
 
+
 ```r
 ducks %>%
-  filter(migratory_strategy=="Long") %>%
-  select(migratory_strategy, log10_mass)
+  group_by(migratory_strategy)%>%
+  summarise(mean_body_mass=mean(log10_mass, na.rm=T)) %>%
+  arrange(mean_body_mass)
 ```
 
 ```
-## # A tibble: 2 × 2
-##   migratory_strategy log10_mass
-##   <chr>                   <dbl>
-## 1 Long                     2.89
-## 2 Long                     2.85
+## # A tibble: 5 × 2
+##   migratory_strategy mean_body_mass
+##   <chr>                       <dbl>
+## 1 Long                         2.87
+## 2 Withdrawal                   2.92
+## 3 Short                        2.98
+## 4 Moderate                     3.11
+## 5 Resident                     4.03
 ```
-Low mass.
+Low mass associated with long migratory distance. High mass is associated with those that do not have to migrate.
+
 
 Problem 9. (2 points) Accipitridae is the family that includes eagles, hawks, kites, and osprey. First, make a new object `eagles` that only includes species in the family Accipitridae. Next, restrict these data to only include the variables common_name, scientific_name, and population_size.
 
@@ -313,6 +330,7 @@ eagles
 ## 20 Zone-tailed Hawk    Buteo albonotatus                     NA
 ```
 
+
 Problem 10. (4 points) In the eagles data, any species with a population size less than 250,000 individuals is threatened. Make a new column `conservation_status` that shows whether or not a species is threatened.
 
 ```r
@@ -348,6 +366,7 @@ eagles
 ## # … with abbreviated variable name ¹​conservation_status
 ```
 
+
 Problem 11. (2 points) Consider the results from questions 9 and 10. Are there any species for which their threatened status needs further study? How do you know?
 
 ```r
@@ -357,7 +376,26 @@ anyNA(eagles$conservation_status)
 ```
 ## [1] TRUE
 ```
-NAs mean that there is not conclusive data for all species reguarding conservation status.
+
+
+```r
+filter(eagles, conservation_status %in% c(NA))
+```
+
+```
+## # A tibble: 8 × 4
+##   common_name       scientific_name          population_size conservation_status
+##   <chr>             <chr>                              <dbl> <lgl>              
+## 1 Bald Eagle        Haliaeetus leucocephalus              NA NA                 
+## 2 Gray Hawk         Buteo nitidus                         NA NA                 
+## 3 Hook-billed Kite  Chondrohierax uncinatus               NA NA                 
+## 4 Short-tailed Hawk Buteo brachyurus                      NA NA                 
+## 5 Snail Kite        Rostrhamus sociabilis                 NA NA                 
+## 6 White-tailed Hawk Buteo albicaudatus                    NA NA                 
+## 7 White-tailed Kite Elanus leucurus                       NA NA                 
+## 8 Zone-tailed Hawk  Buteo albonotatus                     NA NA
+```
+NAs mean that there is not conclusive/collected data for some species regarding conservation status. These 8 species require further study.
 
 
 Problem 12. (4 points) Use the `ecosphere` data to perform one exploratory analysis of your choice. The analysis must have a minimum of three lines and two functions. You must also clearly state the question you are attempting to answer.
@@ -365,7 +403,8 @@ Problem 12. (4 points) Use the `ecosphere` data to perform one exploratory analy
 ```r
 ecosphere %>%
   filter(habitat=="Wetland")%>%
-  count(diet)
+  count(diet) %>%
+  arrange(desc(n))
 ```
 
 ```
@@ -373,14 +412,17 @@ ecosphere %>%
 ##   diet              n
 ##   <chr>         <int>
 ## 1 Invertebrates    72
-## 2 Omnivore         23
-## 3 Seed              1
+## 2 Vertebrates      34
+## 3 Omnivore         23
 ## 4 Vegetation       23
-## 5 Vertebrates      34
+## 5 Seed              1
 ```
-The amount of different diet types of species living in the Wetland habitat.
+I am looking for the amount of species living in the Wetland habitat following different the diet types and the most common diet type among the species. 
 
 Please provide the names of the students you have worked with with during the exam:
 
+```r
+#Srinidhi Venkatesh
+```
 
 Please be 100% sure your exam is saved, knitted, and pushed to your github repository. No need to submit a link on canvas, we will find your exam in your repository.

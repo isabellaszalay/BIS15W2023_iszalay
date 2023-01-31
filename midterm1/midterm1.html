@@ -499,7 +499,7 @@ represented in the data?</p>
 ## 17 Psittaciformes        6
 ## 18 Strigiformes         16
 ## 19 Trogoniformes         1</code></pre>
-<p>19 orders</p>
+<p>There are 19 orders of birds represented in the data.</p>
 <p>Problem 4. (2 points) Which habitat has the highest diversity (number
 of species) in the data?</p>
 <pre class="r"><code>ecosphere %&gt;%
@@ -514,7 +514,7 @@ of species) in the data?</p>
 ## 5 Ocean        44
 ## 6 Grassland    36
 ## 7 &lt;NA&gt;         14</code></pre>
-<p>Woodland</p>
+<p>Woodland habitat is the most diverse.</p>
 <p>Run the code below to learn about the <code>slice</code> function.
 Look specifically at the examples (at the bottom) for
 <code>slice_max()</code> and <code>slice_min()</code>. If you are still
@@ -537,6 +537,7 @@ largest and smallest winter range?</p>
 ## #   upper_95_percent_ci &lt;dbl&gt;, and abbreviated variable names ¹​common_name,
 ## #   ²​scientific_name, ³​life_expectancy, ⁴​urban_affiliate, ⁵​migratory_strategy,
 ## #   ⁶​log10_mass</code></pre>
+<p>The Sooty Shearwater has the largest winter range.</p>
 <pre class="r"><code>ecosphere %&gt;%
   slice_min(winter_range_area)</code></pre>
 <pre><code>## # A tibble: 1 × 21
@@ -550,6 +551,7 @@ largest and smallest winter range?</p>
 ## #   upper_95_percent_ci &lt;dbl&gt;, and abbreviated variable names ¹​common_name,
 ## #   ²​scientific_name, ³​life_expectancy, ⁴​urban_affiliate, ⁵​migratory_strategy,
 ## #   ⁶​log10_mass</code></pre>
+<p>The Skylark has the smallest winter range area.</p>
 <p>Problem 6. (2 points) The family Anatidae includes ducks, geese, and
 swans. Make a new object <code>ducks</code> that only includes species
 in the family Anatidae. Restrict this new dataframe to include all
@@ -592,18 +594,25 @@ exceptions, list the species below.</p>
 ## #   and abbreviated variable names ¹​common_name, ²​scientific_name,
 ## #   ³​life_expectancy, ⁴​urban_affiliate, ⁵​migratory_strategy, ⁶​log10_mass,
 ## #   ⁷​mean_eggs_per_clutch, ⁸​mean_age_at_sexual_maturity</code></pre>
+<p>The Common Eider is the only exception among the ducks, living in the
+Ocean.</p>
 <p>Problem 8. (4 points) In ducks, how is mean body mass associated with
 migratory strategy? Do the ducks that migrate long distances have high
 or low average body mass?</p>
 <pre class="r"><code>ducks %&gt;%
-  filter(migratory_strategy==&quot;Long&quot;) %&gt;%
-  select(migratory_strategy, log10_mass)</code></pre>
-<pre><code>## # A tibble: 2 × 2
-##   migratory_strategy log10_mass
-##   &lt;chr&gt;                   &lt;dbl&gt;
-## 1 Long                     2.89
-## 2 Long                     2.85</code></pre>
-<p>Low mass.</p>
+  group_by(migratory_strategy)%&gt;%
+  summarise(mean_body_mass=mean(log10_mass, na.rm=T)) %&gt;%
+  arrange(mean_body_mass)</code></pre>
+<pre><code>## # A tibble: 5 × 2
+##   migratory_strategy mean_body_mass
+##   &lt;chr&gt;                       &lt;dbl&gt;
+## 1 Long                         2.87
+## 2 Withdrawal                   2.92
+## 3 Short                        2.98
+## 4 Moderate                     3.11
+## 5 Resident                     4.03</code></pre>
+<p>Low mass associated with long migratory distance. High mass is
+associated with those that do not have to migrate.</p>
 <p>Problem 9. (2 points) Accipitridae is the family that includes
 eagles, hawks, kites, and osprey. First, make a new object
 <code>eagles</code> that only includes species in the family
@@ -672,27 +681,43 @@ Are there any species for which their threatened status needs further
 study? How do you know?</p>
 <pre class="r"><code>anyNA(eagles$conservation_status)</code></pre>
 <pre><code>## [1] TRUE</code></pre>
-<p>NAs mean that there is not conclusive data for all species reguarding
-conservation status.</p>
+<pre class="r"><code>filter(eagles, conservation_status %in% c(NA))</code></pre>
+<pre><code>## # A tibble: 8 × 4
+##   common_name       scientific_name          population_size conservation_status
+##   &lt;chr&gt;             &lt;chr&gt;                              &lt;dbl&gt; &lt;lgl&gt;              
+## 1 Bald Eagle        Haliaeetus leucocephalus              NA NA                 
+## 2 Gray Hawk         Buteo nitidus                         NA NA                 
+## 3 Hook-billed Kite  Chondrohierax uncinatus               NA NA                 
+## 4 Short-tailed Hawk Buteo brachyurus                      NA NA                 
+## 5 Snail Kite        Rostrhamus sociabilis                 NA NA                 
+## 6 White-tailed Hawk Buteo albicaudatus                    NA NA                 
+## 7 White-tailed Kite Elanus leucurus                       NA NA                 
+## 8 Zone-tailed Hawk  Buteo albonotatus                     NA NA</code></pre>
+<p>NAs mean that there is not conclusive/collected data for some species
+regarding conservation status. These 8 species require further
+study.</p>
 <p>Problem 12. (4 points) Use the <code>ecosphere</code> data to perform
 one exploratory analysis of your choice. The analysis must have a
 minimum of three lines and two functions. You must also clearly state
 the question you are attempting to answer.</p>
 <pre class="r"><code>ecosphere %&gt;%
   filter(habitat==&quot;Wetland&quot;)%&gt;%
-  count(diet)</code></pre>
+  count(diet) %&gt;%
+  arrange(desc(n))</code></pre>
 <pre><code>## # A tibble: 5 × 2
 ##   diet              n
 ##   &lt;chr&gt;         &lt;int&gt;
 ## 1 Invertebrates    72
-## 2 Omnivore         23
-## 3 Seed              1
+## 2 Vertebrates      34
+## 3 Omnivore         23
 ## 4 Vegetation       23
-## 5 Vertebrates      34</code></pre>
-<p>The amount of different diet types of species living in the Wetland
-habitat.</p>
+## 5 Seed              1</code></pre>
+<p>I am looking for the amount of species living in the Wetland habitat
+following different the diet types and the most common diet type among
+the species.</p>
 <p>Please provide the names of the students you have worked with with
 during the exam:</p>
+<pre class="r"><code>#Srinidhi Venkatesh</code></pre>
 <p>Please be 100% sure your exam is saved, knitted, and pushed to your
 github repository. No need to submit a link on canvas, we will find your
 exam in your repository.</p>

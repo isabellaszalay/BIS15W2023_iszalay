@@ -369,7 +369,7 @@ histogram of column data
 
 ```{r}
 na.rm=TRUE    
-is.na
+is.na()
 anyNA
 ```
 

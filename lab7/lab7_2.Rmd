@@ -88,20 +88,34 @@ amniota <- readr::read_csv("data/amniota.csv")
 ```
 
 ```{r}
-
+any_na(amniota)
 ```
 
 2. Use one of the tools explained above to summarize NA's in the data.
 ```{r}
+glimpse(amniota)
+```
 
+```{r}
+amniota %>% 
+  summarise_all(~(sum(is.na(.))))
 ```
 
 3. What's going on here? Try using the `hist` function on one or more of the continuous variables.
 ```{r}
-
+hist(amniota$egg_mass_g)
 ```
 
 4. Given that we know that the output of #2 is wrong, what do you think is the best approach for dealing with NA's in the `amniote` data? How are they represented?  
+```{r}
+amniota_tidy <- amniota %>%
+ na_if("-999")
+```
+```{r}
+amniota_tidy %>% 
+  summarise_all(~(sum(is.na(.))))
+```
+
 
 ## Replacing values with NA
 If you are certain that NA's are represented by a specific value in the data, the best way to deal with them is to replace the value with NA. This is similar to a find & replace function in excel. 
@@ -159,17 +173,22 @@ life_history <- read_csv("data/mammal_lifehistories_v2.csv")
 
 1. Do you see any NA's? Try using naniar.
 ```{r}
-
+naniar::miss_var_summary(life_history)
 ```
 
 2. Does this result seem likely? How are NA's represented in the data?
 ```{r}
-
+glimpse(life_history)
 ```
 
 3. Replace the placeholder values with NA and recheck.
 ```{r}
+life_history_tidy <- life_history %>% 
+  na_if("-999")
+```
 
+```{r}
+naniar::miss_var_summary(life_history_tidy)
 ```
 
 ## Wrap-up  

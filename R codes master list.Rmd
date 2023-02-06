@@ -346,6 +346,7 @@ dataset %>%
               total = n())
 ```
 **can add filter, select, group_by to the summarize/summarise functions to hone in 
+use group by with ategorical values
  
               
 ```{r}
@@ -374,6 +375,48 @@ anyNA
 ```
 
 
-              
-sleep  --> sumarize mean sleep, minimum sleep, max sleep
+```{r}
+dataset %>% 
+  summarize(number_nas = sum(is.na(dataset)))
+```
+how many NAs in the dataset
+
+
+```{r}
+dataset %>% 
+  summarise_all(~(sum(is.na(.))))
+```
+where all the NAs are across the columns 
+
+
+```{r}
+dataset %>%
+  summarize(across(c(column1, column2, column3), n_distinct))
+```
+distinct counts over multiple variables
+
+
+```{r}
+dataset %>%
+  summarize(across(contains(" "), mean, na.rm=T))
+```
+get the mean for all variables in dataset that contain " ". 
+
+
+```{r}
+dataset %>%
+  summarise_all(n_distinct)
+```
+
+
+```{r}
+naniar::miss_var_summary(dataset)
+```
+nice, clean summary of NA's across the data frame
+
+```{r}
+dataset %>%  
+  mutate(column_modified = na_if(column, ""))%>% 
+  count(column_modified, sort = T)
+```
 

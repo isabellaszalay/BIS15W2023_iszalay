@@ -55,6 +55,11 @@ dataset <- readr::read_csv("data/dataset.csv", na = c("", "-99", "-"))
 
 
 ```{r}
+dataset <- read_csv(here("lab#", "data#", "dataset.csv"))
+```
+points to specific location - exactly where to find dataset 
+
+```{r}
 janitor::clean_names(dataset)
 ```
 cleans up column names
@@ -419,4 +424,65 @@ dataset %>%
   mutate(column_modified = na_if(column, ""))%>% 
   count(column_modified, sort = T)
 ```
+
+```{r}
+getwd()
+```
+where am I?
+
+
+```{r}
+dataset %>%
+  pivot_longer(-column, #will not pivot
+               names_to = "new column", #make a new column 
+               values_to = "new column", #values moved to
+               ) %>%
+  filter()%>%
+  arrange()
+```
+
+
+```{r}
+dataset2 <- 
+  dataset %>% 
+  pivot_longer(col1:col76, # a range of columns
+               names_to = "new col",
+               values_to = "new col2",
+               values_drop_na = TRUE #this will drop the NA's
+               )
+```
+
+
+```{r}
+dataset %>% 
+  separate(column, into= c("column1", "column2"), sep = "_")
+```
+ separate columns whose variables look like variable1_variable2 in 1 column
+ 
+ 
+```{r}
+dataset %>%
+  unite(newcolumn, col1, col2)
+```
+ combines col1 and col2
+
+
+```{r}
+dataset %>% 
+  transform(column = str_split(column, ";")) %>%
+  unnest(column)
+```
+more than one value or observation in a row separated by ;
+
+
+```{r}
+dataset %>% 
+  pivot_wider(names_from = "column", #the observations under key will become new columns
+              values_from = "coulmn2")
+```
+
+
+
+
+
 

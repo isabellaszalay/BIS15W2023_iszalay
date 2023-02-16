@@ -482,7 +482,71 @@ dataset %>%
 ```
 
 
+```{r}
+dataset %>% 
+  filter(column1=="" | column1=="") %>% 
+  group_by(column2, column1) %>% 
+  summarise(n=n(), .groups='keep')
+```
 
 
 
+GGPLOT: 
+
+```{r}
+labs(title = "",
+       x = "",
+       y = "")
+```
+label plot!
+
+
+```{r}
+dataset %>%
+  ggplot(aes(x=, y=, fill=)) + 
+  geom_boxplot(alpha=.7) 
+```
+box plot: define x and y. fill in the boxplots by some variable, can be x! alpha changes color saturation
+
+
+```{r}
+dataset%>%
+  ggplot(aes(x=, y=, fill=)) + geom_col() 
+```
+bar plot with y defined 
+
+
+```{r}
+dataset%>%
+  ggplot(aes(x=, fill=)) + geom_bar() 
+```
+bar plot with no defined y
+
+```{r}
+dataset %>% 
+  ggplot(aes(x=, y=, group=, color=))+
+  geom_line()+
+  geom_point(shape=)+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  labs(title = "",
+       x = "",
+       fill = "")
+```
+line graph: shape - canges shape of points on line. theme changes orientation of values on x axis
+
+
+
+
+```{r}
+homerange %>% 
+  ggplot(aes(x = log10.mass)) +
+  geom_histogram(alpha = 0.9, color = "cornsilk1", fill = "plum", bins=25)+
+  labs(title = "")
+```
+histogram
+color changes outline, fill changes color inside bins chane how many histogram bars
+
+```{r}
+grDevices::colors()
+```
 

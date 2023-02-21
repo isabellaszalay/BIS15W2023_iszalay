@@ -37,7 +37,7 @@ The idea for this assignment came from [Rebecca Barter's](http://www.rebeccabart
 ## Gapminder
 For this assignment, we are going to use the dataset [gapminder](https://cran.r-project.org/web/packages/gapminder/index.html). Gapminder includes information about economics, population, and life expectancy from countries all over the world. You will need to install it before use. This is the same data that we will use for midterm 2 so this is good practice.
 ```{r}
-#install.packages("gapminder")
+install.packages("gapminder")
 library("gapminder")
 ```
 
@@ -223,6 +223,16 @@ gapminder %>%
        y = "Population",
        fill = "Continent")
 ```
+```{r}
+names(gapminder)
+```
+
+
+```{r}
+gapminder %>% 
+ ggplot(aes(x=pop + 
+              geom_density() + 
+              facet_wrap(~continent)))
 ```
 
 

@@ -550,3 +550,26 @@ color changes outline, fill changes color inside bins chane how many histogram b
 grDevices::colors()
 ```
 
+
+```{r}
+ls("package:ggthemes")[grepl("theme_", ls("package:ggthemes"))]
+```
+
+```{r}
+p+theme_classic()+
+  theme(axis.text.x = element_text(angle = 60, hjust=1))+
+  labs(title = "Observations by Taxon in Homerange Data",
+       x = NULL,
+       y= "n",
+       fill= "Trophic Guild")
+```
+
+
+```{r}
+?RColorBrewer
+```
+
+```{r}
+display.brewer.pal(6,"GnBu")
+```
+

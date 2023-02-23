@@ -691,3 +691,14 @@ p+theme_classic()+
 display.brewer.pal(6,"GnBu")
 ```
 
+
+```{r}
+dataset %>% 
+  select(col, col1, col2) %>% 
+  filter(col1==value1 | col1==value2) %>% 
+  pivot_wider(names_from = col1,
+              values_from = col2) %>% 
+  mutate(delta= `value1`- `value2`) %>% 
+  arrange(desc(delta)) %>%
+  head(10)
+```

@@ -28,6 +28,14 @@ gapminder
 
 
 ```{r}
+gapminder %>%
+  pivot_wider(names_from = "year",
+              values_from = "pop" ) %>%
+   group_by(country) 
+```
 
+```{r}
+gapminder %>%
+  filter(pop, )
 ```
 

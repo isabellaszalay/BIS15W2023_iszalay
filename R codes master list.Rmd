@@ -528,6 +528,11 @@ p+geom_point(aes(shape=thermoregulation, color=thermoregulation), size=1.75)
 Map shapes to another categorical variable.
 
 
+```{r}
+library(gtools)
+quartiles <- quantcut(homerange$log10.hra)
+table(quartiles)
+```
 
 ```{r}
 homerange <- homerange %>% 

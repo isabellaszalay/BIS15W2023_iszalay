@@ -61,6 +61,10 @@ surgery %>%
 surgery %>%
   filter(race!="NA") %>%
   ggplot(aes(x=race, fill=race)) + geom_bar(position="dodge") +
+  theme_linedraw()+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text( size=10)) +
   labs(title = "Race Distribution of Patients",
        x = "Race",
        y = "Count")
@@ -83,6 +87,10 @@ surgery %>%
 surgery %>%
   filter(gender!="NA") %>%
   ggplot(aes(x=gender, y=age, fill=gender)) + 
+  theme_linedraw()+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text(size=10)) +
   geom_boxplot()+
   labs(title = "Age Distribution by Gender of Patients",
        x = "Gender",
@@ -94,6 +102,10 @@ surgery %>%
 surgery %>%
   filter(asa_status!="NA") %>%
   ggplot(aes(x=asa_status, fill=asa_status)) + geom_bar() + 
+  theme_linedraw()+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text( size=10)) +
   labs(title = "ASA Status of Patients",
        x = "ASA Status",
        y = "Count")
@@ -107,8 +119,12 @@ surgery %>%
 surgery %>% 
   filter(asa_status!="NA") %>%
   ggplot(aes(x= bmi, fill=asa_status))+ 
-  geom_bar() + 
-  facet_wrap(~asa_status, ncol=4)+
+  geom_density() + 
+  theme_linedraw()+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text( size=10)) +
+  facet_wrap(~asa_status, ncol=1)+
   labs(title= "Distribution of BMI for Each ASA Status",
        x="BMI",
        y="Count")
@@ -120,27 +136,60 @@ The variable `ccsmort30rate` is a measure of the overall 30-day mortality rate a
 ```{r}
 surgery %>%
   select(ahrq_ccs, ccsmort30rate) %>%
-  group_by(ahrq_ccs) 
-  
-  
+  group_by(ahrq_ccs) %>%
+  summarise(mean_ccsmort30rate=mean(ccsmort30rate)) %>%
+  arrange(-mean_ccsmort30rate) %>%
+  head(5)
 ```
-```{r}
 
-  
+```{r}
+surgery %>%
+  select(ahrq_ccs, ccscomplicationrate) %>%
+  group_by(ahrq_ccs) %>%
+  summarise(mean_ccscomplicationrate=mean(ccscomplicationrate)) %>%
+  arrange(-mean_ccscomplicationrate) %>%
+  head(5)
 ```
 
 
 8. (3 points) Make a plot that compares the `ccsmort30rate` for all listed `ahrq_ccs` procedures.
+```{r}
+surgery %>%
+  select(ahrq_ccs, ccsmort30rate) %>%
+  ggplot(aes(x=ahrq_ccs, y=ccsmort30rate, fill=ahrq_ccs)) + geom_col() + 
+  theme_linedraw()+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text(size=10)) +
+  labs(title= "Comparative 30-Day Mortality Rate Across Operations",
+       x="30-Day Mortality Rate",
+       y="Operation") +
+  theme(legend.position = "bottom") + 
+  coord_flip()
+```
+
 
 9. (4 points) When is the best month to have surgery? Make a chart that shows the 30-day mortality and complications for the patients by month. `mort30` is the variable that shows whether or not a patient survived 30 days post-operation.
+
 
 ```{r}
 surgery %>%
   select(month, mort30) %>%
   filter(mort30=="Yes") %>%
   group_by(month) %>%
-  count(mort30)
+  count(mort30)%>%
+  arrange(n)
 ```
+```{r}
+surgery %>%
+  select(month, complication) %>%
+  filter(complication=="Yes") %>%
+  group_by(month) %>%
+  count(complication) %>%
+  arrange(n)
+```
+
+December is the best month to have surgeries!
 
 
 10. (4 points) Make a plot that visualizes the chart from question #9. Make sure that the months are on the x-axis. Do a search online and figure out how to order the months Jan-Dec. 
@@ -151,11 +200,27 @@ surgery %>%
   group_by(month) %>%
   count(mort30) %>%
   ggplot(aes(x=month, y=n, fill=month)) + geom_col() + 
+  scale_x_discrete(limits=month.abb) +
   labs(title = "Number of 30 Day Mortality Rates Across Each Month",
        x="Month",
-       y="Count")
+       y=" 30 Day Mortality Count") 
+```
+
+```{r}
+surgery %>%
+  select(month, complication) %>%
+  filter(complication=="Yes") %>%
+  group_by(month) %>%
+  count(complication)%>%
+  ggplot(aes(x=month, y=n, fill=month)) + geom_col() + 
+  scale_x_discrete(limits=month.abb) +
+  labs(title = "Number of Complication Rates Across Each Month",
+       x="Month",
+       y="Complication Count") 
 ```
 
 Please provide the names of the students you have worked with with during the exam:
+
+Srinidhi Venkatesh
 
 Please be 100% sure your exam is saved, knitted, and pushed to your github repository. No need to submit a link on canvas, we will find your exam in your repository.

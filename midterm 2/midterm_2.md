@@ -150,6 +150,10 @@ surgery %>%
 surgery %>%
   filter(race!="NA") %>%
   ggplot(aes(x=race, fill=race)) + geom_bar(position="dodge") +
+  theme_linedraw()+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text( size=10)) +
   labs(title = "Race Distribution of Patients",
        x = "Race",
        y = "Count")
@@ -184,6 +188,10 @@ surgery %>%
 surgery %>%
   filter(gender!="NA") %>%
   ggplot(aes(x=gender, y=age, fill=gender)) + 
+  theme_linedraw()+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text(size=10)) +
   geom_boxplot()+
   labs(title = "Age Distribution by Gender of Patients",
        x = "Gender",
@@ -202,6 +210,10 @@ surgery %>%
 surgery %>%
   filter(asa_status!="NA") %>%
   ggplot(aes(x=asa_status, fill=asa_status)) + geom_bar() + 
+  theme_linedraw()+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text( size=10)) +
   labs(title = "ASA Status of Patients",
        x = "ASA Status",
        y = "Count")
@@ -218,15 +230,19 @@ surgery %>%
 surgery %>% 
   filter(asa_status!="NA") %>%
   ggplot(aes(x= bmi, fill=asa_status))+ 
-  geom_bar() + 
-  facet_wrap(~asa_status, ncol=4)+
+  geom_density() + 
+  theme_linedraw()+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text( size=10)) +
+  facet_wrap(~asa_status, ncol=1)+
   labs(title= "Distribution of BMI for Each ASA Status",
        x="BMI",
        y="Count")
 ```
 
 ```
-## Warning: Removed 3289 rows containing non-finite values (`stat_count()`).
+## Warning: Removed 3289 rows containing non-finite values (`stat_density()`).
 ```
 
 ![](midterm_2_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
@@ -238,32 +254,67 @@ The variable `ccsmort30rate` is a measure of the overall 30-day mortality rate a
 ```r
 surgery %>%
   select(ahrq_ccs, ccsmort30rate) %>%
-  group_by(ahrq_ccs) 
+  group_by(ahrq_ccs) %>%
+  summarise(mean_ccsmort30rate=mean(ccsmort30rate)) %>%
+  arrange(-mean_ccsmort30rate) %>%
+  head(5)
 ```
 
 ```
-## # A tibble: 32,001 × 2
-## # Groups:   ahrq_ccs [23]
-##    ahrq_ccs ccsmort30rate
-##    <chr>            <dbl>
-##  1 <Other>        0.00425
-##  2 <Other>        0.00425
-##  3 <Other>        0.00425
-##  4 <Other>        0.00425
-##  5 <Other>        0.00425
-##  6 <Other>        0.00425
-##  7 <Other>        0.00425
-##  8 <Other>        0.00425
-##  9 <Other>        0.00425
-## 10 <Other>        0.00425
-## # … with 31,991 more rows
+## # A tibble: 5 × 2
+##   ahrq_ccs                                             mean_ccsmort30rate
+##   <chr>                                                             <dbl>
+## 1 Colorectal resection                                            0.0167 
+## 2 Small bowel resection                                           0.0129 
+## 3 Gastrectomy; partial and total                                  0.0127 
+## 4 Endoscopy and endoscopic biopsy of the urinary tract            0.00811
+## 5 Spinal fusion                                                   0.00742
 ```
 
+
+```r
+surgery %>%
+  select(ahrq_ccs, ccscomplicationrate) %>%
+  group_by(ahrq_ccs) %>%
+  summarise(mean_ccscomplicationrate=mean(ccscomplicationrate)) %>%
+  arrange(-mean_ccscomplicationrate) %>%
+  head(5)
+```
+
+```
+## # A tibble: 5 × 2
+##   ahrq_ccs                         mean_ccscomplicationrate
+##   <chr>                                               <dbl>
+## 1 Small bowel resection                               0.466
+## 2 Colorectal resection                                0.312
+## 3 Nephrectomy; partial or complete                    0.197
+## 4 Gastrectomy; partial and total                      0.190
+## 5 Spinal fusion                                       0.183
+```
 
 
 8. (3 points) Make a plot that compares the `ccsmort30rate` for all listed `ahrq_ccs` procedures.
 
+```r
+surgery %>%
+  select(ahrq_ccs, ccsmort30rate) %>%
+  ggplot(aes(x=ahrq_ccs, y=ccsmort30rate, fill=ahrq_ccs)) + geom_col() + 
+  theme_linedraw()+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text(size=10)) +
+  labs(title= "Comparative 30-Day Mortality Rate Across Operations",
+       x="30-Day Mortality Rate",
+       y="Operation") +
+  theme(legend.position = "bottom") + 
+  coord_flip()
+```
+
+![](midterm_2_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
+
+
 9. (4 points) When is the best month to have surgery? Make a chart that shows the 30-day mortality and complications for the patients by month. `mort30` is the variable that shows whether or not a patient survived 30 days post-operation.
+
 
 
 ```r
@@ -271,7 +322,8 @@ surgery %>%
   select(month, mort30) %>%
   filter(mort30=="Yes") %>%
   group_by(month) %>%
-  count(mort30)
+  count(mort30)%>%
+  arrange(n)
 ```
 
 ```
@@ -279,19 +331,49 @@ surgery %>%
 ## # Groups:   month [12]
 ##    month mort30     n
 ##    <chr> <chr>  <int>
-##  1 Apr   Yes       12
-##  2 Aug   Yes        9
-##  3 Dec   Yes        4
-##  4 Feb   Yes       17
-##  5 Jan   Yes       19
-##  6 Jul   Yes       12
-##  7 Jun   Yes       14
+##  1 Dec   Yes        4
+##  2 Nov   Yes        5
+##  3 Oct   Yes        8
+##  4 Aug   Yes        9
+##  5 May   Yes       10
+##  6 Apr   Yes       12
+##  7 Jul   Yes       12
 ##  8 Mar   Yes       12
-##  9 May   Yes       10
-## 10 Nov   Yes        5
-## 11 Oct   Yes        8
-## 12 Sep   Yes       16
+##  9 Jun   Yes       14
+## 10 Sep   Yes       16
+## 11 Feb   Yes       17
+## 12 Jan   Yes       19
 ```
+
+```r
+surgery %>%
+  select(month, complication) %>%
+  filter(complication=="Yes") %>%
+  group_by(month) %>%
+  count(complication) %>%
+  arrange(n)
+```
+
+```
+## # A tibble: 12 × 3
+## # Groups:   month [12]
+##    month complication     n
+##    <chr> <chr>        <int>
+##  1 Dec   Yes            237
+##  2 Jul   Yes            301
+##  3 Apr   Yes            321
+##  4 Mar   Yes            324
+##  5 Nov   Yes            325
+##  6 May   Yes            333
+##  7 Feb   Yes            343
+##  8 Oct   Yes            377
+##  9 Jan   Yes            407
+## 10 Jun   Yes            410
+## 11 Sep   Yes            424
+## 12 Aug   Yes            462
+```
+
+December is the best month to have surgeries!
 
 
 10. (4 points) Make a plot that visualizes the chart from question #9. Make sure that the months are on the x-axis. Do a search online and figure out how to order the months Jan-Dec. 
@@ -303,13 +385,32 @@ surgery %>%
   group_by(month) %>%
   count(mort30) %>%
   ggplot(aes(x=month, y=n, fill=month)) + geom_col() + 
+  scale_x_discrete(limits=month.abb) +
   labs(title = "Number of 30 Day Mortality Rates Across Each Month",
        x="Month",
-       y="Count")
+       y=" 30 Day Mortality Count") 
 ```
 
-![](midterm_2_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+![](midterm_2_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+
+
+```r
+surgery %>%
+  select(month, complication) %>%
+  filter(complication=="Yes") %>%
+  group_by(month) %>%
+  count(complication)%>%
+  ggplot(aes(x=month, y=n, fill=month)) + geom_col() + 
+  scale_x_discrete(limits=month.abb) +
+  labs(title = "Number of Complication Rates Across Each Month",
+       x="Month",
+       y="Complication Count") 
+```
+
+![](midterm_2_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
 
 Please provide the names of the students you have worked with with during the exam:
+
+Srinidhi Venkatesh
 
 Please be 100% sure your exam is saved, knitted, and pushed to your github repository. No need to submit a link on canvas, we will find your exam in your repository.

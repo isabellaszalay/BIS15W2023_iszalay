@@ -70,6 +70,7 @@ dataset_new <- rename(dataset, newname="oldname", newname2="oldname2")
 ```
 
 
+
 ```{r}
 dataset <- select_all(dataset, tolower)
 ```
@@ -196,6 +197,11 @@ returns last value in a column
 n_distinct()
 ```
 number of distinct values in a column
+
+```{r}
+dataset %>% 
+  summarize(n_column=n_distinct(column))
+```
 
 
 ```{r}
@@ -490,6 +496,10 @@ dataset %>%
 ```
 
 
++ `discrete` quantitative data that only contains integers
++ `continuous` quantitative data that can take any numerical value
++ `categorical` qualitative data that can take on a limited number of values
+
 
 GGPLOT: 
 
@@ -500,28 +510,119 @@ labs(title = "",
 ```
 label plot!
 
+```{r}
+dataset %>%
+  ggplot(aes(x=, y=log10(), size=)) +
+  geom_point(na.rm=T)+
+  theme(plot.title=element_text(size=rel(1.25), hjust=.5))
+```
+theme! change size of text - rel() changes relative size
+hjust - control title position
+`size` adjusts the size of points relative to a continuous variable.
 
+
+
+```{r}
+p+geom_point(aes(shape=thermoregulation, color=thermoregulation), size=1.75)
+```
+Map shapes to another categorical variable.
+
+
+
+```{r}
+homerange <- homerange %>% 
+             mutate(mass_category = case_when(log10.mass <= 1.75 ~ "small",
+                                              log10.mass > 1.75 & log10.mass <= 2.75 ~ "medium",
+                                              log10.mass > 2.75 ~ "large"))
+```
+We use `case_when()` within `mutate()` to do this.`case_when()` allows us to specify multiple conditions
+
+
+overplotting
+```{r}
+geom_jitter()
+```
+
+
+```{r}
+library(ggthemes)
+```
+
+```{r}
+ls("package:ggthemes")[grepl("theme_", ls("package:ggthemes"))]
+```
+
+```{r}
+?RColorBrewer
+```
+
+```{r}
+display.brewer.pal(4,"GnBu")
+```
+
+```{r}
+my_palette <- paletteer_d("ggprism::flames")
+```
+
+
+```{r}
+dataset %>% 
+  ggplot(aes(x=, y=, fill=))+ 
+  geom_boxplot(alpha=0.4) + 
+  facet_wrap(~migratory_strategy, ncol=4)+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  labs(title = "Mass by Diet and Migratory Strategy",
+       x = NULL,
+       y = "",
+       fill = "")
+```
+
+```{r}
+ecosphere %>% 
+  ggplot(aes(x=diet, y=log10_mass, fill=migratory_strategy))+ 
+  geom_boxplot(alpha=0.4)+ 
+  facet_grid(migratory_strategy~.)+
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))+
+  labs(title = "Mass by Diet and Migratory Strategy",
+       x = NULL,
+       y = "Log 10 Mass",
+       fill = "Migratory Strategy")
+```
+
+
+```{r}
+  theme_linedraw()+
+  theme(plot.title = element_text(size = 12, face = "bold"),
+        axis.title = element_text(size = 10),
+        axis.text.x = element_text(angle=75, hjust = 1, size=5))
+```
+
+
+box plot:
 ```{r}
 dataset %>%
   ggplot(aes(x=, y=, fill=)) + 
   geom_boxplot(alpha=.7) 
 ```
-box plot: define x and y. fill in the boxplots by some variable, can be x! alpha changes color saturation
+ define x and y. fill in the boxplots by some variable, can be x! alpha changes color saturation
 
 
+bar plot:
 ```{r}
 dataset%>%
-  ggplot(aes(x=, y=, fill=)) + geom_col() 
+  ggplot(aes(x=, y=, fill=)) + geom_col() +
+  coord_flip()
 ```
 bar plot with y defined 
 
-
 ```{r}
 dataset%>%
-  ggplot(aes(x=, fill=)) + geom_bar() 
+  ggplot(aes(x=, fill=)) + geom_bar(position="dodge") 
 ```
 bar plot with no defined y
 
+
+line graph:
 ```{r}
 dataset %>% 
   ggplot(aes(x=, y=, group=, color=))+
@@ -534,17 +635,34 @@ dataset %>%
 ```
 line graph: shape - canges shape of points on line. theme changes orientation of values on x axis
 
+```{r}
+life_expectancy_long %>%
+  filter(country=="Kuwait") %>%
+  filter(between(year, 1920, 2020)) %>%
+  select(year, life_expectancy) %>%
+  ggplot(aes(x=year, y=life_expectancy, group=1)) + geom_line()
+```
+group = 1 Each group consists of only one observation
 
+scatter plot:
+```{r}
+dataset %>%
+  ggplot(aes(x= , y= )) + 
+  geom_point(na.rm=T) + 
+  scale_y_log10()
+```
+remove nas and scale y value
 
-
+histogram
 ```{r}
 homerange %>% 
   ggplot(aes(x = log10.mass)) +
   geom_histogram(alpha = 0.9, color = "cornsilk1", fill = "plum", bins=25)+
   labs(title = "")
 ```
-histogram
-color changes outline, fill changes color inside bins chane how many histogram bars
+color changes outline, fill changes color inside bins change how many histogram bars
+
+
 
 ```{r}
 grDevices::colors()

@@ -1,0 +1,33 @@
+---
+title: "practice"
+output: html_document
+date: "2023-02-23"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(janitor)
+library(here)
+library(naniar)
+``` 
+
+
+```{r}
+#install.packages("gapminder")
+library("gapminder")
+```
+
+```{r}
+gapminder
+```
+
+
+```{r}
+
+```
+

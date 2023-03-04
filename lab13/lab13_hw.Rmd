@@ -3,9 +3,9 @@ title: "Lab 13 Homework"
 author: "Please Add Your Name Here"
 date: "`r Sys.Date()`"
 output:
-  html_document:
+  html_document: 
     theme: spacelab
-    toc: no
+    keep_md: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -25,9 +25,6 @@ library(here)
 library(ggmap)
 ``` 
 
-```{r}
-library(albersusa)
-```
 
 ## Load the Data
 We will use two separate data sets for this homework.  

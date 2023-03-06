@@ -137,7 +137,7 @@ bbox_wolves_new <- make_bbox(long, lat, f = 0.05)
 
 8.  Load a map from `stamen` in a `terrain-lines` projection and display the map.  
 ```{r}
-map2 <- get_map(bbox_wolves_new, maptype = "terrain", source = "stamen")
+map2 <- get_map(bbox_wolves_new, maptype = "terrain-lines", source = "stamen")
 ```
 
 ```{r}

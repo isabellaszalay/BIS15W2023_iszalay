@@ -1,7 +1,7 @@
 ---
 title: "Lab 13 Homework"
 author: "Please Add Your Name Here"
-date: "2023-03-03"
+date: "2023-03-06"
 output:
   html_document: 
     theme: spacelab
@@ -343,7 +343,7 @@ bbox_wolves_new <- make_bbox(long, lat, f = 0.05)
 8.  Load a map from `stamen` in a `terrain-lines` projection and display the map.  
 
 ```r
-map2 <- get_map(bbox_wolves_new, maptype = "terrain", source = "stamen")
+map2 <- get_map(bbox_wolves_new, maptype = "terrain-lines", source = "stamen")
 ```
 
 ```
